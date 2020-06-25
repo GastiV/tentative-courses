@@ -41,6 +41,7 @@ public class TentativeCoursesGenerator {
                         if (teacher == null) { continue; }
                         for (Modality modality:modalities) {
                                 for (Level level:levels) {
+
                                         if (modality == Modality.GROUP){
                                                 students = takeStudents(6, this.getAvailableStudentsByModalityAndLevel(schedule, modality, level));
                                         }else{
@@ -94,6 +95,8 @@ public class TentativeCoursesGenerator {
                         .collect(Collectors.toList());
         }
         private List<Student> getAvailableStudentsByModalityAndLevel(Schedule schedule, Modality modality, Level level){
+                //TODO IMPROVEMENT
+                //When filtering available students, we could possibly create a custom condition to match deffered students
                 return students.stream()
                         .filter(student ->
                                 student.getLevel() == level &&
