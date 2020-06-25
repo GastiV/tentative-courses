@@ -48,6 +48,15 @@ public class TentativeCourse {
         }
         students.add(student);
     }
+    public void assignStudents(List<Student> students){
+        for (Student student: students) {
+            this.assignStudent(student);
+        }
+    }
+
+    public Boolean hasStudent(Student student){
+        return this.students.contains(student);
+    }
 
     public void setLevel(Level level){
         this.level = level;

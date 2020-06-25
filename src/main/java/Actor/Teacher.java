@@ -14,6 +14,9 @@ public class Teacher implements CourseMember{
         return schedules.contains(schedule);
     }
 
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
     //courses are tentative not final, should I fix a teacher in two courses at same time? this way I am.
 
 }

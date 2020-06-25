@@ -18,7 +18,8 @@ public class CourseTest {
     Schedule thuFifteen;
 
     Teacher teacherMonSeventeen;
-    Teacher aTeacher;
+    Teacher teacherWedNine;
+    Teacher teacherThuFifteen;
 
     Student studentMonSeventeen;
     Student studentMonSeventeenB;
@@ -31,6 +32,8 @@ public class CourseTest {
     Student studentWedNine;
     Student studentWedNineB;
 
+    List<Student> students;
+    List<Teacher> teachers;
     TentativeCourse tentativeCourse;
 
     @Before
@@ -39,7 +42,7 @@ public class CourseTest {
         //Fixture
 
         tentativeCourse = new TentativeCourse(Arrays.asList(new CourseHasRoomAvailable(), new StudentHasRightModality(),
-                new StudentIsAvailable(), new StudentHasRightLevel()));
+                          new StudentIsAvailable(), new StudentHasRightLevel()));
         tentativeCourse.setLevel(Level.BEGINNER);
 
         monSeventeen = new Schedule(17, BusinessDay.MONDAY);
@@ -48,10 +51,17 @@ public class CourseTest {
 
         List<Schedule> monSeventeenOnly = Arrays.asList(monSeventeen);
         List<Schedule> wedNineOnly = Arrays.asList(wedNine);
+        List<Schedule> thuFifteenOnly = Arrays.asList(thuFifteen);
 
-        Teacher aTeacher = new Teacher(monSeventeenOnly);
+        //Teachers
+
+        teacherMonSeventeen = new Teacher(monSeventeenOnly);
+        teacherWedNine = new Teacher(wedNineOnly);
+        teacherThuFifteen = new Teacher(thuFifteenOnly);
+
+
         //Students for group Course
-        studentMonSeventeen  = new Student(monSeventeenOnly);
+        studentMonSeventeen = new Student(monSeventeenOnly);
         studentMonSeventeenB = new Student(monSeventeenOnly);
         studentMonSeventeenC = new Student(monSeventeenOnly);
         studentMonSeventeenD = new Student(monSeventeenOnly);
@@ -79,21 +89,40 @@ public class CourseTest {
         studentWedNine = new Student(wedNineOnly);
         studentWedNineB = new Student(wedNineOnly);
 
+        studentWedNine.setModality(Modality.INDIVIDUAL);
+        studentWedNineB.setModality(Modality.INDIVIDUAL);
+        studentWedNine.setLevel(Level.PREINTERMEDIATE);
+        studentWedNineB.setLevel(Level.ADVANCED);
+
+
+        students = Arrays.asList(studentMonSeventeen,
+                studentMonSeventeenB,
+                studentMonSeventeenC,
+                studentMonSeventeenD,
+                studentMonSeventeenE,
+                studentMonSeventeenF,
+                studentMonSeventeenG,
+                studentWedNine,
+                studentWedNineB
+                );
+
+        teachers = Arrays.asList(teacherMonSeventeen, teacherThuFifteen, teacherWedNine);
+
+
+
     }
 
     //Los cursos tienen que respetar el horario que el docente tiene disponible.
     @Test
     public void courseRespectsTeachersSchedule(){
-        aTeacher = new Teacher(Arrays.asList(wedNine));
         tentativeCourse .setSchedule(wedNine);
-        tentativeCourse.assignTeacher(aTeacher);
-        Assert.assertTrue(tentativeCourse.getTeacher() == aTeacher);
+        tentativeCourse.assignTeacher(teacherWedNine);
+        Assert.assertTrue(tentativeCourse.getTeacher() == teacherWedNine);
     }
     @Test (expected = TeacherException.class)
     public void courseRespectsTeachersScheduleOrThrowException(){
-        aTeacher = new Teacher(Arrays.asList(wedNine));
         tentativeCourse .setSchedule(monSeventeen);
-        tentativeCourse.assignTeacher(aTeacher);
+        tentativeCourse.assignTeacher(teacherWedNine);
     }
 
     //Los cursos tienen que respetar el horario disponible de los estudiantes
@@ -171,5 +200,19 @@ public class CourseTest {
         //set wrong modality
         studentMonSeventeenF.setModality(Modality.INDIVIDUAL);
         tentativeCourse.assignStudent(studentMonSeventeenF);
+    }
+
+
+    @Test
+    public void courseGetsGenerated(){
+        TentativeCoursesGenerator tentativeCoursesGenerator = new TentativeCoursesGenerator(students, teachers);
+        tentativeCoursesGenerator.generateTentativeCourses();
+        Assert.assertTrue(!tentativeCoursesGenerator.getTentativeCourses().isEmpty() );
+    }
+    @Test
+    public void studentsKeepUnassigned(){
+        TentativeCoursesGenerator tentativeCoursesGenerator = new TentativeCoursesGenerator(students, teachers);
+        tentativeCoursesGenerator.generateTentativeCourses();
+        Assert.assertTrue(!tentativeCoursesGenerator.getUnassignedStudents().isEmpty() );
     }
 }
