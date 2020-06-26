@@ -13,16 +13,12 @@ import java.util.List;
 public class TentativeCourse {
     Teacher teacher;
     Level level;
-
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
-
     Schedule schedule;
     List<Student> students = new ArrayList();
     Modality modality;
     //Validation condition list to be added on instantiation
     List<CourseValidation> conditions;
+
 
     public TentativeCourse(List<CourseValidation>conditions){
         this.conditions = conditions;
@@ -34,10 +30,14 @@ public class TentativeCourse {
             throw new TeacherException("Teacher is not available");
         }
     }
-    public Integer studentCount(){
+
+    public Boolean courseHasRoomAvailable(){
+        return (this.studentCount() < this.getMaximumSize());
+    }
+    private Integer studentCount(){
         return students.size();
     }
-    public Integer getMaximumSize(){
+    private Integer getMaximumSize(){
         return modality.maximumSize();
     }
 
@@ -61,7 +61,9 @@ public class TentativeCourse {
     public void setLevel(Level level){
         this.level = level;
     }
-
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
     public Level getLevel() { return level; }
     public Teacher getTeacher(){
         return teacher;

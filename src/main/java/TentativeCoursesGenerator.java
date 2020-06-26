@@ -20,7 +20,7 @@ public class TentativeCoursesGenerator {
         }
 
         //Collections.emptyList() throws Exception
-        List<TentativeCourse> tentativeCourses = new ArrayList<TentativeCourse>();;
+        List<TentativeCourse> tentativeCourses = new ArrayList<>();;
 
         public TentativeCoursesGenerator(List<Student> students, List<Teacher> teachers){
                 this.students = students;
